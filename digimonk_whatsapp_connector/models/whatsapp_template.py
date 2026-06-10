@@ -219,15 +219,15 @@ class WhatsAppTemplate(models.Model):
 
     def _compute_account_info(self):
         ICP = self.env['ir.config_parameter'].sudo()
-        waba_id = ICP.get_param('tripfactory_whatsapp.waba_id', '')
+        waba_id = ICP.get_param('digimonk_whatsapp.waba_id', '')
         for rec in self:
             rec.whatsapp_account_info = waba_id or 'Not configured'
 
     # ── Helpers ───────────────────────────────────────────────────────────────
     def _get_api_config(self):
         ICP = self.env['ir.config_parameter'].sudo()
-        token = ICP.get_param('tripfactory_whatsapp.access_token', '')
-        waba_id = ICP.get_param('tripfactory_whatsapp.waba_id', '')
+        token = ICP.get_param('digimonk_whatsapp.access_token', '')
+        waba_id = ICP.get_param('digimonk_whatsapp.waba_id', '')
         if not token or not waba_id:
             raise UserError(_(
                 'WhatsApp API credentials are not configured. '
@@ -248,8 +248,8 @@ class WhatsAppTemplate(models.Model):
             raise UserError(_('Please select a file first using the "Header File" field.'))
 
         ICP = self.env['ir.config_parameter'].sudo()
-        token = ICP.get_param('tripfactory_whatsapp.access_token', '')
-        app_id = ICP.get_param('tripfactory_whatsapp.app_id', '')
+        token = ICP.get_param('digimonk_whatsapp.access_token', '')
+        app_id = ICP.get_param('digimonk_whatsapp.app_id', '')
         if not token:
             raise UserError(_('WhatsApp Access Token is not configured. Go to Settings → WhatsApp Configuration.'))
         if not app_id:

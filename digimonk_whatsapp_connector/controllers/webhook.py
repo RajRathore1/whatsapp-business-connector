@@ -16,7 +16,7 @@ class WhatsAppWebhookController(http.Controller):
         challenge = kwargs.get('hub.challenge')
 
         ICP = request.env['ir.config_parameter'].sudo()
-        verify_token = ICP.get_param('tripfactory_whatsapp.webhook_verify_token', '')
+        verify_token = ICP.get_param('digimonk_whatsapp.webhook_verify_token', '')
 
         if mode == 'subscribe' and token and token == verify_token:
             _logger.info('WhatsApp webhook verified successfully.')

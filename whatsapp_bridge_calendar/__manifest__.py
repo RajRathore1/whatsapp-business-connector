@@ -5,7 +5,7 @@
     'summary': 'Adds WhatsApp button to Calendar Events when both modules are installed',
     'author': 'DigiMonk Technologies',
     'license': 'LGPL-3',
-    'depends': ['tripfactory_whatsapp_enterprise', 'calendar'],
+    'depends': ['digimonk_whatsapp_connector', 'calendar'],
     'data': ['views/calendar_event_views.xml'],
     'auto_install': True,
     'installable': True,

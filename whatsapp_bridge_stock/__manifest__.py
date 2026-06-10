@@ -5,7 +5,7 @@
     'summary': 'Adds WhatsApp button to Delivery Orders when both modules are installed',
     'author': 'DigiMonk Technologies',
     'license': 'LGPL-3',
-    'depends': ['tripfactory_whatsapp_enterprise', 'stock'],
+    'depends': ['digimonk_whatsapp_connector', 'stock'],
     'data': ['views/stock_picking_views.xml'],
     'auto_install': True,
     'installable': True,

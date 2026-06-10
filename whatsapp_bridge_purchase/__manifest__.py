@@ -5,7 +5,7 @@
     'summary': 'Adds WhatsApp button to Purchase Orders when both modules are installed',
     'author': 'DigiMonk Technologies',
     'license': 'LGPL-3',
-    'depends': ['tripfactory_whatsapp_enterprise', 'purchase'],
+    'depends': ['digimonk_whatsapp_connector', 'purchase'],
     'data': ['views/purchase_order_views.xml'],
     'auto_install': True,
     'installable': True,

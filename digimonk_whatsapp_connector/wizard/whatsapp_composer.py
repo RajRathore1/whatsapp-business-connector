@@ -74,7 +74,7 @@ class WhatsAppComposer(models.TransientModel):
                 _logger.warning('Failed to prefill WhatsApp composer: %s', e)
 
         ICP = self.env['ir.config_parameter'].sudo()
-        default_tmpl = ICP.get_param('tripfactory_whatsapp.default_template_id', '')
+        default_tmpl = ICP.get_param('digimonk_whatsapp.default_template_id', '')
         if default_tmpl:
             try:
                 tmpl = self.env['whatsapp.template'].browse(int(default_tmpl))
@@ -195,8 +195,8 @@ class WhatsAppComposer(models.TransientModel):
 
     def _get_api_config(self):
         ICP = self.env['ir.config_parameter'].sudo()
-        token = ICP.get_param('tripfactory_whatsapp.access_token', '')
-        phone_number_id = ICP.get_param('tripfactory_whatsapp.phone_number_id', '')
+        token = ICP.get_param('digimonk_whatsapp.access_token', '')
+        phone_number_id = ICP.get_param('digimonk_whatsapp.phone_number_id', '')
         if not token or not phone_number_id:
             raise UserError(_(
                 'WhatsApp API credentials are not configured. '

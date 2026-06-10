@@ -8,9 +8,9 @@
             <xpath expr="//form" position="inside">
                 <app data-string="WhatsApp"
                      string="WhatsApp"
-                     name="tripfactory_whatsapp_enterprise"
+                     name="digimonk_whatsapp_connector"
                      groups="base.group_system">
-                    <block title="WhatsApp Business Configuration (TripFactory)">
+                    <block title="WhatsApp Business Configuration">
                         <setting string="Meta Access Token"
                                  help="Permanent access token from Meta Business Suite (System User)">
                             <field name="whatsapp_access_token"
@@ -41,7 +41,7 @@
                         <setting string="Webhook Verify Token"
                                  help="Custom token used to verify Meta webhook. Set this same value in Meta Developer Console.">
                             <field name="whatsapp_webhook_verify_token"
-                                   placeholder="tripfactory_webhook_secret"/>
+                                   placeholder="my_webhook_secret"/>
                         </setting>
                         <setting string="Default Quotation Template"
                                  help="Pre-selected template when opening the WhatsApp composer from a quotation">
