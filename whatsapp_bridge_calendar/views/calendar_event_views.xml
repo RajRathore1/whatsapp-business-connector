@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_calendar_event_form_whatsapp" model="ir.ui.view">
+        <field name="name">calendar.event.form.whatsapp</field>
+        <field name="model">calendar.event</field>
+        <field name="inherit_id" ref="calendar.view_calendar_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="action_view_whatsapp_messages" type="object"
+                        class="oe_stat_button" icon="fa-whatsapp"
+                        invisible="whatsapp_message_count == 0">
+                    <field name="whatsapp_message_count" widget="statinfo" string="WhatsApp"/>
+                </button>
+            </xpath>
+            <xpath expr="//header/button[@name='action_open_composer']" position="after">
+                <button name="action_send_whatsapp" string="Send via WhatsApp"
+                        type="object" class="btn-success"
+                        invisible="not user_can_edit"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

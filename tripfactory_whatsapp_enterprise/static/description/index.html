@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', Arial, sans-serif; color: #1a1a1a; background: #fff; }
+
+/* ── Hero ─────────────────────────────────────────────── */
+.hero {
+    background: linear-gradient(135deg, #064e3b 0%, #065f46 40%, #047857 70%, #059669 100%);
+    padding: 56px 48px 48px;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -60px; right: -60px;
+    width: 320px; height: 320px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.06);
+}
+.hero::after {
+    content: '';
+    position: absolute;
+    bottom: -80px; right: 120px;
+    width: 220px; height: 220px;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.1);
+}
+.hero-inner { display: flex; align-items: center; gap: 32px; position: relative; z-index: 1; }
+.hero-icon {
+    width: 90px; height: 90px; border-radius: 22px;
+    background: #fff;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.18);
+}
+.hero-icon img { width: 70px; height: 70px; object-fit: contain; }
+.hero-text h1 { color: #fff; font-size: 34px; font-weight: 700; line-height: 1.2; }
+.hero-text h1 span { color: #6ee7b7; }
+.hero-text p { color: #a7f3d0; font-size: 15px; margin-top: 10px; line-height: 1.6; max-width: 680px; }
+.hero-badges { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+.badge {
+    display: inline-block; padding: 5px 14px; border-radius: 20px;
+    font-size: 12px; font-weight: 600; letter-spacing: 0.3px;
+}
+.badge-white { background: rgba(255,255,255,0.15); color: #fff; border: 1px solid rgba(255,255,255,0.3); }
+.badge-green { background: #059669; color: #fff; }
+.badge-lime { background: #6ee7b7; color: #064e3b; }
+
+/* ── Community Banner ─────────────────────────────────── */
+.community-bar {
+    background: #fffbeb;
+    border-top: 3px solid #f59e0b;
+    padding: 14px 48px;
+    display: flex; align-items: center; gap: 12px;
+    font-size: 13.5px; color: #78350f;
+}
+.community-bar strong { color: #92400e; }
+
+/* ── Section ──────────────────────────────────────────── */
+.section { padding: 48px 48px; }
+.section.alt { background: #f8fafc; }
+.section-title {
+    font-size: 22px; font-weight: 700; color: #064e3b;
+    padding-bottom: 10px;
+    border-bottom: 3px solid #10b981;
+    margin-bottom: 28px;
+    display: inline-block;
+}
+
+/* ── Feature Grid ─────────────────────────────────────── */
+.feature-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.feature-card {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    padding: 24px 20px;
+    transition: box-shadow 0.2s;
+    border-top: 3px solid #10b981;
+}
+.feature-card .f-icon { font-size: 28px; margin-bottom: 12px; }
+.feature-card h3 { font-size: 15px; font-weight: 700; color: #064e3b; margin-bottom: 8px; }
+.feature-card p { font-size: 13px; color: #64748b; line-height: 1.6; }
+
+/* ── Module Grid ──────────────────────────────────────── */
+.module-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 14px; }
+.module-card {
+    background: linear-gradient(135deg, #064e3b, #065f46);
+    border-radius: 12px; padding: 20px 14px;
+    text-align: center; color: #fff;
+}
+.module-card .m-icon { font-size: 30px; margin-bottom: 8px; }
+.module-card h4 { font-size: 13px; font-weight: 700; margin-bottom: 4px; }
+.module-card p { font-size: 11px; color: #a7f3d0; }
+.module-card .auto-badge {
+    display: inline-block; margin-top: 8px;
+    background: rgba(110,231,183,0.2); color: #6ee7b7;
+    border-radius: 8px; padding: 2px 8px; font-size: 10px;
+}
+
+/* ── How it Works ─────────────────────────────────────── */
+.steps { display: flex; flex-direction: column; gap: 0; }
+.step-row { display: flex; gap: 24px; align-items: flex-start; padding: 20px 0; border-bottom: 1px solid #e2e8f0; }
+.step-row:last-child { border-bottom: none; }
+.step-num {
+    width: 40px; height: 40px; border-radius: 50%; flex-shrink: 0;
+    background: linear-gradient(135deg, #064e3b, #10b981);
+    color: #fff; font-size: 16px; font-weight: 700;
+    display: flex; align-items: center; justify-content: center;
+}
+.step-content h4 { font-size: 15px; font-weight: 700; color: #064e3b; margin-bottom: 6px; }
+.step-content p { font-size: 13px; color: #64748b; line-height: 1.6; }
+.step-content code {
+    background: #f0fdf4; color: #065f46; padding: 1px 6px;
+    border-radius: 4px; font-size: 12px; font-family: monospace;
+}
+
+/* ── PDF Fix Highlight ────────────────────────────────── */
+.highlight-box {
+    background: linear-gradient(135deg, #f0fdf4, #dcfce7);
+    border: 1.5px solid #86efac;
+    border-radius: 12px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+}
+.highlight-box h3 { color: #064e3b; font-size: 16px; margin-bottom: 8px; }
+.highlight-box p { color: #166534; font-size: 13px; line-height: 1.7; }
+
+/* ── Requirements ─────────────────────────────────────── */
+.req-list { list-style: none; }
+.req-list li {
+    padding: 10px 0; border-bottom: 1px solid #f1f5f9;
+    font-size: 14px; color: #475569;
+    display: flex; align-items: center; gap: 10px;
+}
+.req-list li::before { content: '✓'; color: #10b981; font-weight: 700; font-size: 16px; }
+
+/* ── Bridge Modules Section ───────────────────────────── */
+.bridge-info {
+    background: #fff;
+    border: 1px solid #e2e8f0;
+    border-left: 4px solid #10b981;
+    border-radius: 8px;
+    padding: 20px 24px;
+    margin-top: 20px;
+    font-size: 13.5px;
+    color: #475569;
+    line-height: 1.7;
+}
+.bridge-info strong { color: #064e3b; }
+
+/* ── DigiMonk Footer ──────────────────────────────────── */
+.footer {
+    background: #064e3b;
+    padding: 36px 48px;
+    display: flex; align-items: center; justify-content: space-between;
+    flex-wrap: wrap; gap: 20px;
+}
+.footer-brand h2 { color: #fff; font-size: 20px; font-weight: 700; }
+.footer-brand h2 span { color: #6ee7b7; }
+.footer-brand p { color: #a7f3d0; font-size: 13px; margin-top: 4px; }
+.footer-links { display: flex; flex-direction: column; gap: 4px; }
+.footer-links a { color: #6ee7b7; text-decoration: none; font-size: 13px; }
+.footer-copy {
+    background: #022c22;
+    text-align: center;
+    padding: 14px;
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* ── Comparison Table ─────────────────────────────────── */
+.compare-table { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+.compare-table th { background: #064e3b; color: #fff; padding: 12px 16px; text-align: left; }
+.compare-table td { padding: 11px 16px; border-bottom: 1px solid #f1f5f9; }
+.compare-table tr:nth-child(even) td { background: #f8fafc; }
+.compare-table td:first-child { font-weight: 600; color: #1e293b; }
+.yes { color: #10b981; font-weight: 700; }
+.no { color: #ef4444; }
+</style>
+</head>
+<body>
+
+<!-- ══ HERO ══════════════════════════════════════════════ -->
+<div class="hero">
+    <div class="hero-inner">
+        <div class="hero-icon">
+            <img src="icon.png" alt="WhatsApp Business Connector"/>
+        </div>
+        <div class="hero-text">
+            <h1>WhatsApp Business <span>Connector</span></h1>
+            <p>
+                Connect your Odoo workflows to WhatsApp Business Cloud API.
+                Send quotations with PDF, invoices, delivery updates, and appointment reminders
+                — all with one click, directly from Odoo.
+            </p>
+            <div class="hero-badges">
+                <span class="badge badge-lime">✓ Odoo 19 Community</span>
+                <span class="badge badge-white">Meta Cloud API</span>
+                <span class="badge badge-white">PDF in WhatsApp</span>
+                <span class="badge badge-white">No Third-party Gateway</span>
+                <span class="badge badge-white">Auto Template Sync</span>
+                <span class="badge badge-green">Free to Install</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ══ COMMUNITY NOTICE ═══════════════════════════════════ -->
+<div class="community-bar">
+    <span style="font-size:18px;">⭐</span>
+    <div>
+        <strong>Built for Odoo 19 Community Edition</strong> —
+        This module works fully on Odoo Community. No Enterprise license required.
+        It connects directly to Meta's official WhatsApp Business Cloud API — no middleman, no extra cost per message.
+    </div>
+</div>
+
+<!-- ══ OVERVIEW ══════════════════════════════════════════ -->
+<div class="section">
+    <div class="section-title">Overview</div>
+
+    <div class="highlight-box">
+        <h3>📄 Reliable PDF Delivery via WhatsApp Template Header</h3>
+        <p>
+            Most WhatsApp integrations send PDFs as a separate document message — which silently fails if the customer hasn't
+            messaged you in the last 24 hours (WhatsApp's session window rule).
+            <br/><br/>
+            <strong>WhatsApp Business Connector solves this</strong> by embedding the PDF directly as a
+            <strong>Document Header in the template message itself</strong>. Template messages are always
+            delivered — no session window needed. Your customer receives the text and PDF together, every time.
+        </p>
+    </div>
+
+    <p style="font-size:14px; color:#475569; line-height:1.8;">
+        <strong>WhatsApp Business Connector</strong> is a comprehensive Odoo 19 Community module that integrates
+        the <strong>Meta WhatsApp Business Cloud API</strong> natively into your sales and operations workflows.
+        Manage templates, send messages, track delivery — all from inside Odoo without any third-party gateway or per-message fees.
+    </p>
+</div>
+
+<!-- ══ FEATURES ══════════════════════════════════════════ -->
+<div class="section alt">
+    <div class="section-title">Key Features</div>
+    <div class="feature-grid">
+
+        <div class="feature-card">
+            <div class="f-icon">📋</div>
+            <h3>Template Management</h3>
+            <p>Create, submit, and sync WhatsApp templates directly from Odoo. Track approval status from Meta. Support for Text, Document, Image, and Video headers.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="f-icon">📄</div>
+            <h3>Quotation PDF Delivery</h3>
+            <p>Automatically generate the Odoo sale order PDF and embed it as a Document header in the template — guaranteed delivery without 24-hour session limitation.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="f-icon">🤖</div>
+            <h3>Smart Auto-Fill</h3>
+            <p>Customer name, phone, amount, destination, travel date, and reference auto-filled when opening the composer from any Odoo record.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="f-icon">🔗</div>
+            <h3>Multi-Module Bridge</h3>
+            <p>Bridge modules auto-activate for Invoicing, Inventory, Purchase, and Calendar — no manual setup. Adds "Send via WhatsApp" button to each module.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="f-icon">💬</div>
+            <h3>Chatter Logging</h3>
+            <p>Every WhatsApp message is logged in the record's chatter with status, phone number, template used, and message preview. Full audit trail.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="f-icon">📊</div>
+            <h3>Message Logs</h3>
+            <p>Dedicated Message Logs menu to view, filter, and manage all sent WhatsApp messages across your entire Odoo instance.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="f-icon">⚙️</div>
+            <h3>Simple Configuration</h3>
+            <p>Enter your Meta Access Token, Phone Number ID, and WABA ID in Odoo Settings. All credentials stored securely as system parameters.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="f-icon">🔄</div>
+            <h3>Meta Sync</h3>
+            <p>One-click sync to pull all approved templates from your Meta Business account into Odoo. Status updates (approved, rejected, paused) synced automatically.</p>
+        </div>
+
+        <div class="feature-card">
+            <div class="f-icon">🌐</div>
+            <h3>Portal Link Support</h3>
+            <p>Optionally include the customer portal link in WhatsApp messages — lets customers view and confirm quotations online.</p>
+        </div>
+    </div>
+</div>
+
+<!-- ══ MODULE COVERAGE ═══════════════════════════════════ -->
+<div class="section">
+    <div class="section-title">Module Coverage</div>
+    <p style="font-size:13.5px; color:#64748b; margin-bottom:20px;">
+        The main module covers <strong>Sales &amp; CRM</strong>. Four bridge modules extend WhatsApp to additional Odoo apps —
+        they <strong>auto-install</strong> when the corresponding Odoo module is detected. No manual activation required.
+    </p>
+    <div class="module-grid">
+        <div class="module-card">
+            <div class="m-icon">💼</div>
+            <h4>Sales &amp; CRM</h4>
+            <p>Quotations, Sale Orders &amp; Leads</p>
+            <div class="auto-badge">Core Module</div>
+        </div>
+        <div class="module-card">
+            <div class="m-icon">🧾</div>
+            <h4>Invoicing</h4>
+            <p>Customer &amp; Vendor Invoices</p>
+            <div class="auto-badge">Auto-Install</div>
+        </div>
+        <div class="module-card">
+            <div class="m-icon">🚚</div>
+            <h4>Inventory</h4>
+            <p>Delivery Orders</p>
+            <div class="auto-badge">Auto-Install</div>
+        </div>
+        <div class="module-card">
+            <div class="m-icon">🛒</div>
+            <h4>Purchase</h4>
+            <p>Purchase Orders</p>
+            <div class="auto-badge">Auto-Install</div>
+        </div>
+        <div class="module-card">
+            <div class="m-icon">📅</div>
+            <h4>Calendar</h4>
+            <p>Appointments &amp; Events</p>
+            <div class="auto-badge">Auto-Install</div>
+        </div>
+    </div>
+
+    <div class="bridge-info">
+        <strong>How Bridge Modules Work:</strong> Each bridge module declares
+        <code>auto_install: True</code> with dependencies on both this module and the target Odoo module.
+        When you install Invoicing, the <em>whatsapp_bridge_account</em> bridge automatically activates —
+        adding the "Send via WhatsApp" button to invoices without any manual steps.
+        Bridge modules are fully independent and can be uninstalled individually.
+    </div>
+</div>
+
+<!-- ══ HOW IT WORKS ══════════════════════════════════════ -->
+<div class="section alt">
+    <div class="section-title">How It Works</div>
+    <div class="steps">
+
+        <div class="step-row">
+            <div class="step-num">1</div>
+            <div class="step-content">
+                <h4>Get Meta API Credentials</h4>
+                <p>
+                    Create a WhatsApp Business app on
+                    <strong>Meta for Developers (developers.facebook.com)</strong>.
+                    You need: <code>Access Token</code>, <code>Phone Number ID</code>, and <code>WABA ID</code>.
+                    Meta's Cloud API has a free tier — no per-message charges for template messages on your own numbers.
+                </p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-num">2</div>
+            <div class="step-content">
+                <h4>Configure in Odoo Settings</h4>
+                <p>
+                    Go to <code>Settings → WhatsApp Configuration</code>. Enter your three credentials.
+                    That's it — the module is ready to send messages.
+                </p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-num">3</div>
+            <div class="step-content">
+                <h4>Create &amp; Approve a Template</h4>
+                <p>
+                    Go to <code>WhatsApp → Templates → New</code>. Write your message body with variables like
+                    <code>{{1}}</code>, <code>{{2}}</code>. Set Header Type to <strong>Document</strong> if you want
+                    PDF delivery. Click <strong>Submit for Approval</strong> — Meta typically approves in minutes to a few hours.
+                </p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-num">4</div>
+            <div class="step-content">
+                <h4>Send from Any Record</h4>
+                <p>
+                    Open a Sale Order, Invoice, Delivery, or CRM Lead.
+                    Click <strong>"Send via WhatsApp"</strong>. Variables auto-fill from the record.
+                    Check "Attach PDF" if needed. Hit <strong>Send</strong>.
+                </p>
+            </div>
+        </div>
+
+        <div class="step-row">
+            <div class="step-num">5</div>
+            <div class="step-content">
+                <h4>Track Everything</h4>
+                <p>
+                    The record chatter shows the message status, preview, and timestamp.
+                    Go to <code>WhatsApp → Message Logs</code> for a global view of all sent messages.
+                </p>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<!-- ══ COMPARISON ════════════════════════════════════════ -->
+<div class="section">
+    <div class="section-title">Why Choose This Module</div>
+    <table class="compare-table">
+        <thead>
+            <tr>
+                <th>Feature</th>
+                <th>WhatsApp Business Connector</th>
+                <th>Typical WhatsApp Modules</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Works on Community Edition</td>
+                <td class="yes">✓ Yes</td>
+                <td class="no">✗ Often Enterprise only</td>
+            </tr>
+            <tr>
+                <td>Direct Meta Cloud API</td>
+                <td class="yes">✓ Yes — no middleman</td>
+                <td class="no">✗ Usually via gateway</td>
+            </tr>
+            <tr>
+                <td>PDF delivered with template</td>
+                <td class="yes">✓ Document header method</td>
+                <td class="no">✗ Separate message (fails silently)</td>
+            </tr>
+            <tr>
+                <td>Auto-install bridge modules</td>
+                <td class="yes">✓ Yes — zero config</td>
+                <td class="no">✗ Manual setup per module</td>
+            </tr>
+            <tr>
+                <td>Template management in Odoo</td>
+                <td class="yes">✓ Full CRUD + Meta sync</td>
+                <td class="no">✗ Usually Meta only</td>
+            </tr>
+            <tr>
+                <td>Chatter logging</td>
+                <td class="yes">✓ Every message logged</td>
+                <td class="no">— Varies</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<!-- ══ REQUIREMENTS ══════════════════════════════════════ -->
+<div class="section alt">
+    <div class="section-title">Requirements</div>
+    <ul class="req-list">
+        <li>Odoo 19 Community Edition (or Enterprise)</li>
+        <li>Meta Business Manager account (free)</li>
+        <li>WhatsApp Business Cloud API access — free tier available at developers.facebook.com</li>
+        <li>At least one approved WhatsApp message template (required by Meta for all outbound messages)</li>
+        <li>Python <code>requests</code> library (included with Odoo by default)</li>
+    </ul>
+</div>
+
+<!-- ══ DIGIMONK FOOTER ═══════════════════════════════════ -->
+<div class="footer">
+    <div class="footer-brand">
+        <h2>Digi<span>Monk</span> Technologies</h2>
+        <p>Custom Odoo Development · WhatsApp Integrations · ERP Consulting</p>
+        <p style="margin-top:8px; font-size:12px; color:#6ee7b7;">
+            📧 bhoopnesh.kushwah@digimonk.in &nbsp;|&nbsp; 🌐 digimonk.in
+        </p>
+    </div>
+    <div class="footer-links">
+        <span style="color:#a7f3d0; font-size:13px; font-weight:600; margin-bottom:4px;">Support &amp; Services</span>
+        <a href="https://digimonk.in">Website: digimonk.in</a>
+        <a href="mailto:bhoopnesh.kushwah@digimonk.in">Email Support</a>
+        <span style="color:#6b7280; font-size:12px; margin-top:6px;">Odoo 19 · LGPL-3 License</span>
+    </div>
+</div>
+<div class="footer-copy">
+    © 2026 DigiMonk Technologies — WhatsApp Business Connector for Odoo 19 Community
+</div>
+
+</body>
+</html>

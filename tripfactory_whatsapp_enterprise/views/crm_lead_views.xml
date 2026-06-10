@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="crm_lead_view_form_whatsapp" model="ir.ui.view">
+        <field name="name">crm.lead.form.whatsapp</field>
+        <field name="model">crm.lead</field>
+        <field name="inherit_id" ref="crm.crm_lead_view_form"/>
+        <field name="arch" type="xml">
+            <!-- WhatsApp message count smart button -->
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button class="oe_stat_button"
+                        type="object"
+                        name="action_view_whatsapp_messages"
+                        icon="fa-comments"
+                        invisible="whatsapp_message_count == 0">
+                    <field string="WhatsApp" name="whatsapp_message_count" widget="statinfo"/>
+                </button>
+            </xpath>
+
+            <!-- Send via WhatsApp action button -->
+            <xpath expr="//div[hasclass('oe_title')]" position="before">
+                <div class="o_row mb-2">
+                    <button name="action_send_whatsapp"
+                            string="Send via WhatsApp"
+                            type="object"
+                            class="btn-success btn-sm"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

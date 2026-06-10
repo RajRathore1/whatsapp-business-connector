@@ -1,0 +1,309 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ═══ List View ═══════════════════════════════════════════════════════ -->
+    <record id="whatsapp_template_view_list" model="ir.ui.view">
+        <field name="name">whatsapp.template.list</field>
+        <field name="model">whatsapp.template</field>
+        <field name="arch" type="xml">
+            <list string="WhatsApp Templates">
+                <field name="name"/>
+                <field name="template_name" optional="show"/>
+                <field name="applies_to_id" optional="show"/>
+                <field name="language"/>
+                <field name="category"/>
+                <field name="header_type" optional="hide"/>
+                <field name="status" widget="badge"
+                       decoration-success="status == 'approved'"
+                       decoration-warning="status == 'pending'"
+                       decoration-danger="status == 'rejected'"
+                       decoration-muted="status in ('draft', 'paused', 'disabled')"/>
+                <field name="meta_template_id" optional="hide"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- ═══ Form View (Enterprise-style) ════════════════════════════════════ -->
+    <record id="whatsapp_template_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.template.form</field>
+        <field name="model">whatsapp.template</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Template">
+                <header>
+                    <button name="action_submit_for_approval"
+                            string="Submit for Approval"
+                            type="object"
+                            class="btn-primary"
+                            invisible="status not in ('draft', 'rejected')"/>
+                    <button name="action_sync_from_meta"
+                            string="Sync All from Meta"
+                            type="object"
+                            class="btn-secondary"/>
+                    <button name="action_delete_from_meta"
+                            string="Delete from Meta"
+                            type="object"
+                            class="btn-danger"
+                            invisible="not meta_template_id"
+                            confirm="This will permanently delete the template from Meta. Continue?"/>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="draft,pending,approved"/>
+                </header>
+
+                <sheet>
+                    <!-- Title / Name -->
+                    <div class="oe_title mb-3">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1>
+                            <field name="name"
+                                   placeholder='e.g. "Quotation Ready"'
+                                   style="font-size:1.6rem;"/>
+                        </h1>
+                    </div>
+
+                    <!-- Two-column layout matching Enterprise -->
+                    <div class="row">
+                        <!-- LEFT: operational fields -->
+                        <div class="col-md-6">
+                            <group string="Configuration">
+                                <field name="whatsapp_account_info"
+                                       string="Account"
+                                       readonly="1"/>
+                                <field name="applies_to_id"
+                                       string="Applies To"
+                                       options="{'no_create': True}"/>
+                                <field name="phone_field_id"
+                                       string="Phone Field"
+                                       invisible="not applies_to_id"
+                                       options="{'no_create': True}"/>
+                                <field name="category"/>
+                            </group>
+                        </div>
+
+                        <!-- RIGHT: template structure -->
+                        <div class="col-md-6">
+                            <group string="Template Details">
+                                <field name="template_name"
+                                       string="Meta Template Name"
+                                       placeholder="auto-generated if blank"/>
+                                <field name="language"/>
+                                <field name="header_type" string="Header Type"/>
+
+                                <!-- TEXT header -->
+                                <field name="header_text"
+                                       string="Header Text"
+                                       invisible="header_type != 'TEXT'"
+                                       required="header_type == 'TEXT'"
+                                       placeholder="Header line (supports {{1}})"/>
+
+                                <!-- IMAGE / DOCUMENT / VIDEO: file picker + Upload to Meta button -->
+                                <div invisible="header_type in ('NONE', 'TEXT')">
+                                    <field name="header_attachment_ids"
+                                           string="Header File"
+                                           widget="many2many_binary"
+                                           nolabel="1"/>
+                                    <button name="action_upload_header_to_meta"
+                                            string="Upload to Meta"
+                                            type="object"
+                                            class="btn btn-primary btn-sm mt-1"
+                                            invisible="not header_attachment_ids"
+                                            title="Upload this file to Meta servers and auto-fill the handle"/>
+                                    <small class="text-muted d-block mt-1">
+                                        Select file above, then click Upload to Meta. Handle fills automatically.<br/>
+                                        Supported: PDF, JPG/PNG, MP4. Max 100 MB.
+                                    </small>
+                                </div>
+
+                                <!-- Handle (auto-filled after upload, editable for manual paste) -->
+                                <field name="header_handle"
+                                       string="Meta Media Handle"
+                                       invisible="header_type in ('NONE', 'TEXT')"
+                                       placeholder="Auto-filled after Upload to Meta  —  or paste manually"/>
+
+                                <!-- Odoo report (for Document header — auto-attach on send) -->
+                                <field name="report_id"
+                                       string="Report (auto-attach on send)"
+                                       invisible="header_type != 'DOCUMENT'"
+                                       options="{'no_create': True}"
+                                       help="Select an Odoo report to auto-attach as PDF when sending this template via the composer"/>
+
+                                <field name="footer_text"
+                                       string="Footer Message"
+                                       placeholder="Optional footer text"/>
+                                <field name="meta_template_id"
+                                       string="Meta ID"
+                                       readonly="1"
+                                       invisible="not meta_template_id"/>
+                            </group>
+                        </div>
+                    </div>
+
+                    <!-- Tabs: Body / Buttons / Variables -->
+                    <notebook>
+                        <!-- ── Body Tab ── -->
+                        <page string="Body" name="body_tab">
+                            <div class="o_field_widget o_field_text">
+                                <field name="body"
+                                       nolabel="1"
+                                       placeholder="Message body. Use {{1}}, {{2}}, ... for dynamic values. Click + Variable to insert."
+                                       style="min-height:120px;font-size:14px;"/>
+                            </div>
+                            <div class="text-end mt-2">
+                                <button name="action_add_variable"
+                                        string="+ Variable"
+                                        type="object"
+                                        class="btn btn-link text-primary fw-bold p-0"
+                                        title="Append the next {{N}} variable to the body"/>
+                            </div>
+
+                            <!-- Preview box -->
+                            <div class="mt-3 p-3 rounded"
+                                 style="background:#DCF8C6;font-family:sans-serif;
+                                        white-space:pre-wrap;line-height:1.5;font-size:14px;
+                                        min-height:80px;border:1px solid #c8e6c9;"
+                                 invisible="not body">
+                                <small class="text-muted d-block mb-1">Preview</small>
+                                <field name="body_preview" readonly="1" nolabel="1"/>
+                            </div>
+                        </page>
+
+                        <!-- ── Buttons Tab ── -->
+                        <page string="Buttons" name="buttons_tab">
+                            <div class="text-muted mb-2 small">
+                                Enter buttons as a JSON array. Example:
+                                <code>[{"type":"URL","text":"View Quotation","url":"https://example.com"}]</code>
+                            </div>
+                            <field name="buttons_json"
+                                   nolabel="1"
+                                   widget="code"
+                                   options="{'mode': 'application/json'}"
+                                   style="min-height:120px;"/>
+                        </page>
+
+                        <!-- ── Variables Tab ── -->
+                        <page string="Variables" name="variables_tab">
+                            <div class="alert alert-info py-2 mb-2" role="alert" style="font-size:13px;">
+                                <strong>How to use:</strong>
+                                Add one row per variable used in the body ({{1}}, {{2}}, …).
+                                The <strong>Demo Value</strong> is what Meta sees as a sample when approving your template — make it realistic.
+                                <em>Odoo Field</em> is optional and used for auto-filling the composer later.
+                            </div>
+                            <field name="variable_ids" nolabel="1">
+                                <list editable="bottom"
+                                      string="Variables">
+                                    <field name="sequence" widget="handle"/>
+                                    <field name="name"
+                                           string="Variable"
+                                           placeholder="{{1}}"
+                                           required="1"/>
+                                    <field name="line_type"
+                                           string="Used In"
+                                           required="1"/>
+                                    <field name="demo_value"
+                                           string="Demo / Example Value"
+                                           required="1"/>
+                                    <field name="field_id"
+                                           string="Odoo Field (optional)"
+                                           optional="hide"
+                                           domain="parent.applies_to_id and [('model_id', '=', parent.applies_to_id)] or [('id', '=', False)]"
+                                           options="{'no_create': True}"/>
+                                    <field name="field_name"
+                                           string="Field Path"
+                                           optional="hide"/>
+                                </list>
+                            </field>
+
+                            <!-- Quick-fill guide -->
+                            <div class="mt-3 p-2 border rounded bg-light" style="font-size:12px;">
+                                <strong>Quick reference for tripfactory_quotation_ready template:</strong>
+                                <table class="table table-sm table-bordered mt-1 mb-0" style="font-size:12px;">
+                                    <thead class="table-secondary">
+                                        <tr><th>Variable</th><th>Used In</th><th>Demo Value to type</th></tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>{{1}}</td><td>Body</td><td>Rahul Sharma</td></tr>
+                                        <tr><td>{{2}}</td><td>Body</td><td>TF-Q00034</td></tr>
+                                        <tr><td>{{3}}</td><td>Body</td><td>Bali, Indonesia</td></tr>
+                                        <tr><td>{{4}}</td><td>Body</td><td>15 Aug 2025</td></tr>
+                                        <tr><td>{{5}}</td><td>Body</td><td>2 Adults, 1 Child</td></tr>
+                                        <tr><td>{{6}}</td><td>Body</td><td>INR 1,28,000</td></tr>
+                                        <tr><td>{{7}}</td><td>Body</td><td>https://tripfactory.com/q/TF-Q00034</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </page>
+
+                        <!-- ── Rejection Reason Tab ── -->
+                        <page string="Rejection Reason"
+                              name="rejection_tab"
+                              invisible="status != 'rejected'">
+                            <div class="alert alert-danger" role="alert">
+                                <strong>Rejected by Meta:</strong>
+                                <field name="rejection_reason" readonly="1" nolabel="1"/>
+                            </div>
+                            <div class="text-muted small mt-2">
+                                Common reasons:
+                                <ul>
+                                    <li><b>INVALID_FORMAT</b> — Template name/content doesn't meet Meta's formatting guidelines. Rename with lowercase and try again.</li>
+                                    <li><b>TAG_CONTENT_MISMATCH</b> — Category doesn't match content (use UTILITY for transactional messages).</li>
+                                    <li><b>PROMOTIONAL</b> — Marketing templates need richer content with clear value to the customer.</li>
+                                </ul>
+                            </div>
+                        </page>
+                    </notebook>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- ═══ Kanban View ═════════════════════════════════════════════════════ -->
+    <record id="whatsapp_template_view_kanban" model="ir.ui.view">
+        <field name="name">whatsapp.template.kanban</field>
+        <field name="model">whatsapp.template</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="name"/>
+                <field name="language"/>
+                <field name="status"/>
+                <field name="category"/>
+                <field name="applies_to_id"/>
+                <field name="body"/>
+                <templates>
+                    <t t-name="card">
+                        <div class="oe_kanban_global_click">
+                            <strong><field name="name"/></strong>
+                            <div class="mt-1">
+                                <span t-att-class="
+                                    record.status.raw_value == 'approved' ? 'badge text-bg-success' :
+                                    record.status.raw_value == 'pending' ? 'badge text-bg-warning' :
+                                    record.status.raw_value == 'rejected' ? 'badge text-bg-danger' :
+                                    'badge text-bg-secondary'">
+                                    <field name="status"/>
+                                </span>
+                                <span class="ms-2 text-muted small"><field name="language"/></span>
+                            </div>
+                            <div class="text-muted small mt-1">
+                                <field name="applies_to_id"/> · <field name="category"/>
+                            </div>
+                            <div class="mt-1 small text-truncate o-two-col-message-preview">
+                                <field name="body"/>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <!-- ═══ Window Action ═══════════════════════════════════════════════════ -->
+    <record id="action_whatsapp_template" model="ir.actions.act_window">
+        <field name="name">WhatsApp Templates</field>
+        <field name="res_model">whatsapp.template</field>
+        <field name="view_mode">list,kanban,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">No templates yet!</p>
+            <p>
+                Create a template, then click <b>Submit for Approval</b> to send it to Meta,
+                or use <b>Sync All from Meta</b> to import your existing approved templates.
+            </p>
+        </field>
+    </record>
+</odoo>

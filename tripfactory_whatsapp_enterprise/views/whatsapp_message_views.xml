@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- List View -->
+    <record id="whatsapp_message_view_list" model="ir.ui.view">
+        <field name="name">whatsapp.message.list</field>
+        <field name="model">whatsapp.message</field>
+        <field name="arch" type="xml">
+            <list string="WhatsApp Messages"
+                  decoration-danger="status == 'failed'"
+                  decoration-success="status == 'read'"
+                  decoration-info="status == 'delivered'">
+                <field name="sent_at"/>
+                <field name="partner_id"/>
+                <field name="phone"/>
+                <field name="template_id"/>
+                <field name="status" widget="badge"
+                       decoration-success="status in ('delivered', 'read')"
+                       decoration-warning="status == 'sent'"
+                       decoration-danger="status == 'failed'"
+                       decoration-muted="status == 'queued'"/>
+                <field name="delivered_at" optional="hide"/>
+                <field name="read_at" optional="hide"/>
+                <field name="meta_message_id" optional="hide"/>
+                <field name="sale_order_id" optional="show"/>
+                <field name="lead_id" optional="show"/>
+            </list>
+        </field>
+    </record>
+
+    <!-- Form View -->
+    <record id="whatsapp_message_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.message.form</field>
+        <field name="model">whatsapp.message</field>
+        <field name="arch" type="xml">
+            <form string="WhatsApp Message Log">
+                <header>
+                    <field name="status" widget="statusbar"
+                           statusbar_visible="queued,sent,delivered,read"/>
+                </header>
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button name="action_view_record"
+                                type="object"
+                                class="oe_stat_button"
+                                icon="fa-external-link"
+                                string="View Record"
+                                invisible="not res_model or not res_id"/>
+                    </div>
+                    <group>
+                        <group string="Recipient">
+                            <field name="partner_id"/>
+                            <field name="phone"/>
+                            <field name="template_id"/>
+                        </group>
+                        <group string="Tracking">
+                            <field name="meta_message_id"/>
+                            <field name="sent_at"/>
+                            <field name="delivered_at"/>
+                            <field name="read_at"/>
+                        </group>
+                    </group>
+                    <group string="Message Content">
+                        <field name="message_body" readonly="1" nolabel="1"/>
+                    </group>
+                    <group string="Linked Records">
+                        <group>
+                            <field name="sale_order_id"/>
+                            <field name="lead_id"/>
+                        </group>
+                        <group>
+                            <field name="res_model" readonly="1"/>
+                            <field name="res_id" readonly="1"/>
+                        </group>
+                    </group>
+                    <group string="Error Details" invisible="not error_message">
+                        <field name="error_message" readonly="1" nolabel="1"
+                               style="color:#dc3545;"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <!-- Window Action -->
+    <record id="action_whatsapp_message" model="ir.actions.act_window">
+        <field name="name">WhatsApp Messages</field>
+        <field name="res_model">whatsapp.message</field>
+        <field name="view_mode">list,form</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No messages sent yet!
+            </p>
+            <p>
+                Use the <b>Send via WhatsApp</b> button on a quotation or CRM opportunity
+                to send your first message.
+            </p>
+        </field>
+    </record>
+</odoo>

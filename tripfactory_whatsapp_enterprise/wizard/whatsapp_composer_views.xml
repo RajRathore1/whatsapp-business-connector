@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="whatsapp_composer_view_form" model="ir.ui.view">
+        <field name="name">whatsapp.composer.form</field>
+        <field name="model">whatsapp.composer</field>
+        <field name="arch" type="xml">
+            <form string="Send via WhatsApp">
+                <sheet>
+                    <div class="oe_title">
+                        <h2>
+                            <span style="color:#25D366;">&#9679;</span>
+                            Send WhatsApp Message
+                        </h2>
+                    </div>
+
+                    <!-- Recipient + Template -->
+                    <group>
+                        <group string="Recipient">
+                            <field name="partner_id"
+                                   options="{'no_create': True}"/>
+                            <field name="phone"
+                                   required="1"
+                                   placeholder="+91 9999999999"/>
+                        </group>
+                        <group string="Template">
+                            <field name="template_id"
+                                   required="1"
+                                   options="{'no_create': True}"/>
+                            <field name="send_pdf"/>
+                            <field name="send_link"/>
+                        </group>
+                    </group>
+
+                    <!-- Variable Mapping -->
+                    <group string="Message Variables"
+                           invisible="not template_id">
+                        <group>
+                            <field name="var_customer_name"
+                                   placeholder="e.g. Rahul Sharma"/>
+                            <field name="var_quotation_number"
+                                   placeholder="e.g. Q00034"/>
+                            <field name="var_destination"
+                                   placeholder="e.g. Bali, Indonesia"/>
+                            <field name="var_travel_date"
+                                   placeholder="e.g. 15 Aug 2025"/>
+                        </group>
+                        <group>
+                            <field name="var_travellers"
+                                   placeholder="e.g. 2 Adults, 1 Child"/>
+                            <field name="var_amount"
+                                   placeholder="e.g. ₹1,28,000"/>
+                            <field name="var_quotation_url"
+                                   placeholder="Portal link (auto-filled)"/>
+                        </group>
+                    </group>
+
+                    <!-- Live Preview -->
+                    <group string="Message Preview"
+                           invisible="not template_id">
+                        <div class="col-12" nolabel="1"
+                             style="background:#DCF8C6;border-radius:10px;padding:14px;
+                                    font-family:sans-serif;white-space:pre-wrap;
+                                    min-height:90px;line-height:1.5;font-size:14px;">
+                            <field name="body_preview" readonly="1" nolabel="1"/>
+                        </div>
+                    </group>
+
+                    <!-- Hidden context fields -->
+                    <field name="res_model" invisible="1"/>
+                    <field name="res_id" invisible="1"/>
+                </sheet>
+                <footer>
+                    <button name="action_send_whatsapp"
+                            string="Send via WhatsApp"
+                            type="object"
+                            class="btn-primary"
+                            data-hotkey="q"/>
+                    <button string="Cancel"
+                            class="btn-secondary"
+                            special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

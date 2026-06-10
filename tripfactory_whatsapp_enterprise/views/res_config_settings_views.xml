@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form_whatsapp" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.whatsapp</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="base.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//form" position="inside">
+                <app data-string="WhatsApp"
+                     string="WhatsApp"
+                     name="tripfactory_whatsapp_enterprise"
+                     groups="base.group_system">
+                    <block title="WhatsApp Business Configuration (TripFactory)">
+                        <setting string="Meta Access Token"
+                                 help="Permanent access token from Meta Business Suite (System User)">
+                            <field name="whatsapp_access_token"
+                                   password="True"
+                                   placeholder="EAAxxxxxxxxxxxxxxxx..."/>
+                        </setting>
+                        <setting string="Phone Number ID"
+                                 help="WhatsApp Business Phone Number ID from Meta Developer App">
+                            <field name="whatsapp_phone_number_id"
+                                   placeholder="1234567890"/>
+                        </setting>
+                        <setting string="WhatsApp Business Account ID (WABA)"
+                                 help="Your WhatsApp Business Account ID from Meta Business Manager">
+                            <field name="whatsapp_waba_id"
+                                   placeholder="1234567890"/>
+                        </setting>
+                        <setting string="App ID"
+                                 help="Your Meta Developer App ID">
+                            <field name="whatsapp_app_id"
+                                   placeholder="1234567890"/>
+                        </setting>
+                        <setting string="App Secret"
+                                 help="Your Meta Developer App Secret">
+                            <field name="whatsapp_app_secret"
+                                   password="True"
+                                   placeholder="abc123def456..."/>
+                        </setting>
+                        <setting string="Webhook Verify Token"
+                                 help="Custom token used to verify Meta webhook. Set this same value in Meta Developer Console.">
+                            <field name="whatsapp_webhook_verify_token"
+                                   placeholder="tripfactory_webhook_secret"/>
+                        </setting>
+                        <setting string="Default Quotation Template"
+                                 help="Pre-selected template when opening the WhatsApp composer from a quotation">
+                            <field name="whatsapp_default_template_id"/>
+                        </setting>
+                    </block>
+                    <block title="Webhook">
+                        <setting string="Webhook Callback URL"
+                                 help="Set this URL as Callback URL in your Meta App Webhooks configuration">
+                            <div>
+                                <code>/whatsapp/webhook</code>
+                                <span class="text-muted ms-2">
+                                    — Subscribe to <b>messages</b> events for delivery/read tracking
+                                </span>
+                            </div>
+                        </setting>
+                    </block>
+                </app>
+            </xpath>
+        </field>
+    </record>
+</odoo>
